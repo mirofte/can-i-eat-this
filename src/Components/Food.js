@@ -11,7 +11,7 @@ class Food extends Component {
 			<Card
 				hoverable
 				style={{ width: 240, height : 300 }}
-				cover={<img alt={food.name} src={food.image} />}
+				cover={food.image ? <img alt={food.name} src={food.image} style={{ height : 150}} /> : ''}
 			  >
 				<Meta
 				  title={food.name}
