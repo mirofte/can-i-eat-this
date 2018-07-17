@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /nbproject
+ yarn.lock
 
 # testing
 /coverage
