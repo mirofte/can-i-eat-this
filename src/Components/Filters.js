@@ -27,7 +27,7 @@ class FiltersForm extends Component{
 	
 	handleReset = () => {
 		if(this.props.form.isFieldsTouched()){
-			this.props._filterFoods();
+			this.props._resetFoods();
 		}
 		
 		this.props.form.resetFields();
@@ -99,7 +99,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = (dispatch) => ({
 	_getFoodTypes : () => dispatch(foodTypesActions.fetchFoodTypes()),
-	_filterFoods : filter => dispatch(filterActions.setFoodFilters(filter))
+	_filterFoods : filter => dispatch(filterActions.setFoodFilters(filter)),
+	_resetFoods	:	() => dispatch(filterActions.resetFoodFilters())
 });
 
 const Filters = Form.create()(FiltersForm);
