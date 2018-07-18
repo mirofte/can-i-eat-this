@@ -54,7 +54,7 @@ class FoodsList extends Component{
 		if(listView === 'grid'){
 			foodsList = <Row gutter={16}>
 					{foods.map( food => {
-						return <Col xs={24} lg={6} key={food.id} style={{ paddingBottom: 20}}><Food food={food}/></Col>
+						return <Col xs={24} sm={12} lg={6} key={food.id} style={{ paddingBottom: 20}}><Food food={food}/></Col>
 					})}
 				</Row>;
 		}
