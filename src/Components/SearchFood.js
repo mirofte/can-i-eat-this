@@ -1,23 +1,26 @@
 import React, { Component } from 'react';
-import * as actions from '../Actions/FoodTypes.actions'
 import * as filterActions from '../Actions/Filters.actions'
 import { connect } from 'react-redux';
-import { Form, Input, Button, Select, Alert} from 'antd';
+import { Form, Select, Alert } from 'antd';
+import Food from './Food';
 
 
 const FormItem = Form.Item;
 const Option = Select.Option;
+
+let timeout;
 
 class SearchFoodForm extends Component {
 	
 	constructor(props){
 		super(props);
 		this.state = {
-			searchActive : false
+			value	: '',
+			searchActive : false,
+			selectedFood : false
 		}
 	}
 	
-	componentWillMount = () => this.props._getFoodTypes();
 	handleSubmit = (e) => {
 		
 		e.preventDefault();
@@ -28,74 +31,89 @@ class SearchFoodForm extends Component {
 				this.props._filterFoods(values);
 			}
 		});
-	  }
-  render() {
+	}
+	  
+	handleChange = (value, option) => {
+		if(option.props.food){
+			this.setState({selectedFood: option.props.food});
+		}
+		this.setState({ value });
+	}
+	
+	handleSearch = (value) => {
+		this.searchFood(value, data => this.setState({ data }));		
+	}
+	
+	searchFood = (value, callback) =>{
+		
+		this.setState({selectedFood: null});
+		if (timeout) {
+			clearTimeout(timeout);
+			timeout = null;
+		}
+		
+		let fakeFetch = () => {
+			const values = {
+				name : value
+			}
+			this.props._filterFoods(values);
+		}
+		
+		timeout = setTimeout(fakeFetch, 300);
+	}
+	
+	render() {
 	  
 	const { getFieldDecorator } = this.props.form;
-	const { foodTypes, foods } = this.props;
-	const { searchActive } = this.state;
+	const { foods }	= this.props;
+	const { searchActive, selectedFood }		= this.state;
+	const options				= foods.map(d => <Option food={d} value ={d.id} key={d.id}>{d.name}</Option>);
     return (
-			<div>
-		<Form onSubmit={this.handleSubmit}>
-         <FormItem
-          labelCol={{ span: 5 }}
-          wrapperCol={{ span: 12 }}
-          label="Food"
-        >
-          {getFieldDecorator('name', {
-            rules: [ {
-              required: true, message: 'Please add a food!',
-            }],
-          })(
-            <Input />
-          )}
-        </FormItem>
-		<FormItem
-          label="Type"
-          labelCol={{ span: 5 }}
-          wrapperCol={{ span: 12 }}
-        >
-          {getFieldDecorator('foodTypeId', {
-          })(
-            <Select placeholder="Select a option and change input text above">
-				{
-					foodTypes.map( foodType => {
-						return <Option key={foodType.id} value={foodType.id}>{foodType.name}</Option>
-					})
-				}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem
-          wrapperCol={{ span: 12, offset: 5 }}
-        >
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </FormItem>
-      </Form>
-	  { searchActive ? 
-			(foods.length) 
-				?
-				<Alert message="Yes, you can eat this" type="success" /> 
-				:
-				<Alert message="No food found" type="error" />  
-			:
-			''
-		} 
-	  </div>
-	  
+		<div>
+			<Form onSubmit={this.handleSubmit}>
+				<FormItem
+				  labelCol={{ span: 5 }}
+				  wrapperCol={{ span: 12 }}
+				  label="Food"
+				>
+				  {getFieldDecorator('name', {
+					rules: [ {
+					  required: true, message: 'Please add a food!',
+					}],
+				  })(
+					<Select
+						size="large"
+						showSearch
+						setFieldsValue={this.state.value}
+						defaultActiveFirstOption={false}
+						showArrow={false}
+						filterOption={false}
+						onSearch={this.handleSearch}
+						onChange={this.handleChange}
+						notFoundContent='No Food'
+					  >
+						{options}
+					  </Select>
+				  )}
+				</FormItem>
+			</Form>
+			{ selectedFood &&
+				<section>
+					<Alert style={{marginBottom:20}} message="Yes, you can eat this" type="success" /> 
+					<Food  food={selectedFood} />
+				</section>
+			}
+			
+		</div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-	foodTypes	:	state.foodTypes,
 	foods		:	state.foods	
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	_getFoodTypes : () => dispatch(actions.fetchFoodTypes()),	
 	_filterFoods : filter => dispatch(filterActions.setFoodFilters(filter))
 });
 
