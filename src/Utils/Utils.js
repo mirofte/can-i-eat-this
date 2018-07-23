@@ -4,7 +4,14 @@ export const prepareUrlFromFilters = filters => {
 	if(typeof filters !== undefined){
 		for(let filter in filters){
 			if(filters[filter]){
-				url += '&' + filter + '_like=' + filters[filter];
+				switch(filter){
+					case 'name':
+						url += '&q=' + filters[filter];
+					break;
+					default:
+						url += '&' + filter + '_like=' + filters[filter];
+					break;
+				}
 			}
 		}
 	}
