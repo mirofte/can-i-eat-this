@@ -15,7 +15,7 @@ class Food extends Component {
 			  >
 				<Meta
 				  title={food.name}
-				  description={ food.foodType? food.foodType.name : 'No food Type'}
+				  description={ food.category ? food.category.name : 'No cateogory'}
 				/>
 			</Card>
 			

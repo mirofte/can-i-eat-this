@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import * as filterActions from '../Actions/Filters.actions';
-import * as foodTypesActions from '../Actions/FoodTypes.actions';
+import * as foodCategoriesActions from '../Actions/FoodCategories.actions';
 import { connect } from 'react-redux';
 import { Form, Row, Col, Input, Button, Icon, Select } from 'antd';
 import '../Css/Filters.css';
@@ -13,7 +13,7 @@ class FiltersForm extends Component{
 		expand: true,
 	};
 	
-	componentWillMount = () => this.props._getFoodTypes();
+	componentWillMount = () => this.props._getFoodCategories();
 	
 	toggle = () => {
 		const { expand } = this.state;
@@ -35,7 +35,7 @@ class FiltersForm extends Component{
 	
 	render = () => {
 		
-		const { foodTypes } = this.props;
+		const { foodCategories } = this.props;
 		const { getFieldDecorator } = this.props.form;
 		const Option = Select.Option;
 		
@@ -58,16 +58,16 @@ class FiltersForm extends Component{
 							)}
 						  </FormItem>
 					</Col>
-					{ foodTypes ?
+					{ foodCategories ?
 					<Col xs={24} lg={8}>
-						<FormItem label="Type">
-							{getFieldDecorator(`foodTypeId`, {
+						<FormItem label="Category">
+							{getFieldDecorator(`foodCategoryId`, {
 							  rules: [],
 							})(
 							 <Select placeholder="" style={{ width: 200 }}>
 								{
-									foodTypes.map( foodType => {
-										return <Option key={foodType.id} value={foodType.id}>{foodType.name}</Option>
+									foodCategories.map( foodCategory => {
+										return <Option key={foodCategory.id} value={foodCategory.id}>{foodCategory.name}</Option>
 									})
 								}
 							</Select>
@@ -95,10 +95,10 @@ class FiltersForm extends Component{
 }
 
 const mapStateToProps = state => ({
-	foodTypes :	state.foodTypes
+	foodCategories :	state.foodCategories
 });
 const mapDispatchToProps = (dispatch) => ({
-	_getFoodTypes : () => dispatch(foodTypesActions.fetchFoodTypes()),
+	_getFoodCategories : () => dispatch(foodCategoriesActions.fetchFoodCategories()),
 	_filterFoods : filter => dispatch(filterActions.setFoodFilters(filter)),
 	_resetFoods	:	() => dispatch(filterActions.resetFoodFilters())
 });

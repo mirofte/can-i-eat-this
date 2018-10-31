@@ -1,20 +1,34 @@
-export const prepareUrlFromFilters = filters => {
-	let url = '';
+export const prepareQuery = options => {
 	
-	if(typeof filters !== undefined){
-		for(let filter in filters){
-			if(filters[filter]){
-				switch(filter){
-					case 'name':
-						url += '&q=' + filters[filter];
-					break;
-					default:
-						url += '&' + filter + '_like=' + filters[filter];
-					break;
+	let query 	= '';
+	let filters = '';
+	if(typeof options !== undefined){
+		if(options.filters){
+			
+			filters += '(';
+
+			for(let filterKey in options.filters){
+				let value = options.filters[filterKey];	
+				if(options.filters[filterKey] !== undefined){
+					if(typeof value === 'string'){
+						value = `"${value}"`;
+					}
+					filters += `${filterKey} : ${value},`;
 				}
 			}
+			filters = filters.slice(0, -1);
+			if(filters){
+				filters += ')';
+			}
 		}
+		query = `
+			query {
+				${options.type}${filters}{
+					${options.fields}
+				}
+			}
+			`;
 	}
 	
-	return url;
+	return query;
 }

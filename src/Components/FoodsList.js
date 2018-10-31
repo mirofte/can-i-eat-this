@@ -43,9 +43,9 @@ class FoodsList extends Component{
 				dataIndex: 'name',
 				key: 'name',
 			  }, {
-				title: 'Type',
-				dataIndex: 'foodType.name',
-				key: 'foodType.name',
+				title: 'Category',
+				dataIndex: 'category.name',
+				key: 'category.name',
 			  }];
 		  
 			const expandedRowRender = food => <img alt={food.name} style={{ width : 200, height : 200}} src={food.image} />;

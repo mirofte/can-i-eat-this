@@ -1,5 +1,5 @@
 import { foodsMiddleware } from '../Middleware/App/foods.middleware';
-import { foodTypesMiddleware } from '../Middleware/App/foodTypes.middleware';
+import { foodCategoriesMiddleware } from '../Middleware/App/foodCategories.middleware';
 import { filtersMiddleware } from '../Middleware/App/filters.middleware';
 import { apiMiddleware } from '../Middleware/Core/api.middleware';
 import {notificationMiddleware} from "../Middleware/Core/notification.middleware";
@@ -8,7 +8,7 @@ import {notificationMiddleware} from "../Middleware/Core/notification.middleware
 export const featureMiddleware = [
   filtersMiddleware,
   foodsMiddleware,
-  foodTypesMiddleware
+  foodCategoriesMiddleware
 ];
 
 // create the core middleware array
