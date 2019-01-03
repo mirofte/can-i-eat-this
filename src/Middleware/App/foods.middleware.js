@@ -1,4 +1,4 @@
-import { FOODS, FETCH_FOODS, setFoods } from '../../Actions/Foods.actions';
+import { FOODS, FETCH_FOODS, FETCH_PAGINATION_FOODS, setFoods } from '../../Actions/Foods.actions';
 import { API_SUCCESS, API_ERROR, apiRequest } from '../../Actions/Api.actions';
 import { setLoader } from '../../Actions/Ui.actions';
 import { setNotification } from '../../Actions/Notification.actions';
@@ -11,6 +11,7 @@ export const foodsMiddleware = () => (next) => (action) => {
 	switch(action.type){
 		
 		case FETCH_FOODS:
+		case FETCH_PAGINATION_FOODS:
 			const query = prepareQuery({
 				type: 'foods', 
 				filters : action.payload,

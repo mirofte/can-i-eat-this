@@ -66,7 +66,7 @@ class SearchFoodForm extends Component {
 	  
 	const { getFieldDecorator } = this.props.form;
 	const { foods }	= this.props;
-	const { selectedFood }		= this.state;
+	const { searchActive, selectedFood }		= this.state;
 	const options				= foods.map(d => <Option food={d} value ={d.id} key={d.id}>{d.name}</Option>);
     return (
 		<div>

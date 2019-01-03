@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as actions from '../Actions/Foods.actions';
 import { connect } from 'react-redux';
 import '../Css/FoodsList.css';
-import { Row, Col, Alert, Table, Radio, Icon } from 'antd';
+import { Row, Col, Alert, Table, Radio, Icon, Button } from 'antd';
 import Food from './Food';
 
 class FoodsList extends Component{
@@ -11,21 +11,36 @@ class FoodsList extends Component{
 		super(props);
 		this.state = {
 			listView : 'grid',
+			initLoading: true,
+			loading: false,
+			limit: 10,
+			offset: 0
 		}
 	}
 	
 	componentDidMount = () => {
-		this.props._getFoods('');
+		this.props._getFoods({limit:this.state.limit, offset:this.state.offset});
+		this.setState({
+			initLoading: false
+		});
 	};
 	
 	changeListView = (e) => {
 		const listView = e.target.value;
 		this.setState({ listView: listView });
 	};
+
+	onLoadMore = () => {
+		let offset = this.state.offset + this.state.limit;
+		this.setState({
+			offset: offset
+		});
+		this.props._getPaginationFoods({limit:this.state.limit, offset});
+	}
 		
 	render = () => {
 		const { foods } = this.props;
-		const { listView } = this.state;
+		const { listView, initLoading, loading  } = this.state;
 		
 		let foodsList = '';
 		
@@ -58,6 +73,11 @@ class FoodsList extends Component{
 					})}
 				</Row>;
 		}
+		const loadMore = !initLoading && !loading ? (
+			<div style={{ textAlign: 'center', marginTop: 12, height: 32, lineHeight: '32px' }}>
+			  <Button onClick={this.onLoadMore}>loading more</Button>
+			</div>
+		  ) : null;
 		return (
 			
 			<div style={{padding:20}}>
@@ -70,6 +90,7 @@ class FoodsList extends Component{
 				<div >
 				{ foodsList }
 				</div>
+				{ loadMore }
 			</div>
 		);
 	}
@@ -80,7 +101,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	_getFoods : (filters) => dispatch(actions.fetchFoods(filters))
+	_getFoods : (filters) => dispatch(actions.fetchFoods(filters)),
+	_getPaginationFoods : (filters) => dispatch(actions.fetchPaginationFoods(filters))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FoodsList);
